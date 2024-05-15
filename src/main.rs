@@ -24,9 +24,9 @@ fn main() -> Result<()> {
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
 
-    let n_rows: usize = 3;
-    let n_cols: usize = 4;
-    let mut gol = Rgol::new(n_rows,n_cols); 
+    let n_rows: usize = 8;
+    let n_cols: usize = 10;
+    let mut gol = Rgol::new(n_rows,n_cols, true); 
     gol.update(0,0);
 
     
@@ -40,8 +40,8 @@ fn main() -> Result<()> {
     for _ in 0..n_cols {
         cols_in_row.push(Constraint::Percentage(100 / n_cols as u16))
     }
-    let mut rows = vec![];
-    let mut grid= vec![];
+    let mut rows;
+    let mut grid;
 
 
     loop {
@@ -66,24 +66,24 @@ fn main() -> Result<()> {
                 for j in 0..g.len() {
                     if gol.game[i %n_rows][j % n_cols] {
                         frame.render_widget(
-                            Paragraph::new(format!("{} {}", i % n_rows, i % n_cols))
-                                .black()
-                                .on_green()
-                                .block(Block::new()
+                            Paragraph::new(format!("{} {}", i % n_rows, j % n_cols))
+                                .blue()
+                                .on_green(),
+                                /* .block(Block::new()
                                     .borders(Borders::ALL)
                                     .padding(Padding::zero())
-                                    .style(Style::new().red().on_black().bold().italic())),
+                                    .style(Style::new().red().on_black().bold().italic())),*/
                             g[j]
                         );
                     }else {
                         frame.render_widget(
-                            Paragraph::new(format!("i:{} / j:{} g.len: {} grid len: {}", i, j, g.len(), grid.len()))
+                            Paragraph::new(format!("{} {}", i % n_rows,j % n_cols))
                                 .green()
-                                .on_black()
-                                .block(Block::new()
+                                .on_blue(),
+                                /*.block(Block::new()
                                     .borders(Borders::ALL)
                                     .padding(Padding::zero())
-                                    .style(Style::new().red().on_black().bold().italic())),
+                                    .style(Style::new().red().on_black().bold().italic())),*/
                             g[j]
                         );
                     }
