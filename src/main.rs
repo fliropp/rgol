@@ -24,8 +24,8 @@ fn main() -> Result<()> {
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
 
-    let n_rows: usize = 8;
-    let n_cols: usize = 10;
+    let n_rows: usize = 6;
+    let n_cols: usize = 6;
     let mut gol = Rgol::new(n_rows,n_cols, true); 
     gol.update(0,0);
 
@@ -98,9 +98,9 @@ fn main() -> Result<()> {
                     break;
                 }
                 if key.kind == KeyEventKind::Press
-                    && key.code == KeyCode::Char('g')
+                    && key.code == KeyCode::Char('r')
                 {
-                    gol.update(1, 1);
+                    gol.run_the_rules();
                 }
             }
         }
