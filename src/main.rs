@@ -24,10 +24,10 @@ fn main() -> Result<()> {
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
 
-    let n_rows: usize = 6;
-    let n_cols: usize = 6;
-    let mut gol = Rgol::new(n_rows,n_cols, true); 
-    gol.update(0,0);
+    let n_rows: usize = 10;
+    let n_cols: usize = 10;
+    let mut gol = Rgol::new(n_rows,n_cols, false);
+    gol.init_glider(); 
 
     
     let mut cols_in_row = Vec::new();
@@ -67,8 +67,8 @@ fn main() -> Result<()> {
                     if gol.game[i %n_rows][j % n_cols] {
                         frame.render_widget(
                             Paragraph::new(format!("{} {}", i % n_rows, j % n_cols))
-                                .blue()
-                                .on_green(),
+                                .white()
+                                .on_blue(),
                                 /* .block(Block::new()
                                     .borders(Borders::ALL)
                                     .padding(Padding::zero())
@@ -79,7 +79,7 @@ fn main() -> Result<()> {
                         frame.render_widget(
                             Paragraph::new(format!("{} {}", i % n_rows,j % n_cols))
                                 .green()
-                                .on_blue(),
+                                .on_black(),
                                 /*.block(Block::new()
                                     .borders(Borders::ALL)
                                     .padding(Padding::zero())

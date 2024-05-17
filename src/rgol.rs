@@ -23,6 +23,15 @@ impl Rgol{
         self.game[x][y] = !self.game[x][y]
     }
 
+    pub fn init_glider(&mut self) {
+        self.game[1][3] = true;
+        self.game[2][1] = true;
+        self.game[2][3] = true;
+        self.game[3][2] = true;
+        self.game[3][3] = true;
+
+    }
+
     
 
     pub fn get_cell_value_wrap_around(&self, x_: i32, y_:i32) -> bool {
@@ -58,19 +67,30 @@ impl Rgol{
         for (i, r) in self.game.clone().iter_mut().enumerate() {
             for (j, _) in r.iter_mut().enumerate() {
                 nbs = self.get_alive_neighbours(i,j);
-                if nbs >= 4 && nbs < 8 && !self.game[i][j]{
+                if nbs == 3 && !self.game[i][j] {
                     swap_set.game[i][j] = true;
                     continue
                 }
-                if nbs == 8 && self.game[i][j]{
+                if nbs == 2 && self.game[i][j] {
+                    swap_set.game[i][j] = true;
+                    continue
+                }
+                if nbs == 3 && self.game[i][j] {
+                    swap_set.game[i][j] = true;
+                    continue
+                }
+                if nbs < 2 && self.game[i][j] {
                     swap_set.game[i][j] = false;
                     continue
                 }
-                if nbs == 0 && !self.game[i][j]{
-                    swap_set.game[i][j] = true;
+                if nbs < 3 && !self.game[i][j] {
+                    swap_set.game[i][j] = false;
                     continue
                 }
-                swap_set.game[i][j] = false; 
+                if nbs > 3 {
+                    swap_set.game[i][j] = false;
+                }
+               
             }
         }
         self.game = swap_set.game;
@@ -94,6 +114,64 @@ fn rand_init(mut grid: Vec<Vec<bool>>) -> Vec<Vec<bool>>{
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_rules() {
+        let mut g: Rgol = Rgol::new(4,4, false);
+        //#1 rule
+        g.game[0][2] = true;
+        g.game[1][2] = true;
+        g.game[2][2] = true;
+        g.game[0][2] = true;
+        assert!(!g.game[1][1]);
+        g.run_the_rules();
+        assert!(g.game[1][1]);
+        //#2 rule
+        g = Rgol::new(4,4, false);
+        g.game[0][2] = true;
+        g.game[1][1] = true;
+        g.game[1][2] = true;
+        g.game[2][2] = true;
+        g.game[0][2] = true;
+        assert!(g.game[1][1]);
+        g.run_the_rules();
+        assert!(!g.game[1][1]);
+
+        g = Rgol::new(4,4, false);
+        g.game[0][2] = true;
+        g.game[1][1] = true;
+        g.game[2][2] = true;
+        g.game[0][2] = true;
+        assert!(g.game[1][1]);
+        g.run_the_rules();
+        assert!(!g.game[1][1]);
+
+        //#3 rule
+        g = Rgol::new(4,4, false);
+        g.game[1][1] = true;
+        g.game[2][2] = true;
+        assert!(g.game[1][1]);
+        g.run_the_rules();
+        assert!(!g.game[1][1]);
+
+        //#4 rule
+        g = Rgol::new(4,4, false);
+        g.game[1][2] = true;
+        g.game[2][2] = true;
+        assert!(!g.game[1][1]);
+        g.run_the_rules();
+        assert!(!g.game[1][1]);
+
+        g = Rgol::new(6,6, false);
+        g.game[0][0] = true;
+        g.game[0][1] = true;
+        g.game[0][2] = true;
+        g.game[1][1] = true;
+        g.game[1][2] = true;
+        assert!(g.game[1][1]);
+        g.run_the_rules();
+        assert!(!g.game[1][1]);
+    }
 
     #[test]
     fn run_the_jewels() {
