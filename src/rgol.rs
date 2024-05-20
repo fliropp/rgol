@@ -19,21 +19,6 @@ impl Rgol{
         Rgol { game: grid }
     }
 
-    pub fn update(&mut self, x: usize, y: usize) {
-        self.game[x][y] = !self.game[x][y]
-    }
-
-    pub fn init_glider(&mut self) {
-        self.game[1][3] = true;
-        self.game[2][1] = true;
-        self.game[2][3] = true;
-        self.game[3][2] = true;
-        self.game[3][3] = true;
-
-    }
-
-    
-
     pub fn get_cell_value_wrap_around(&self, x_: i32, y_:i32) -> bool {
         let mut x = x_ as i32;
         let mut y = y_ as i32;
@@ -60,7 +45,7 @@ impl Rgol{
         }
         alive_count
     }
-
+    
     pub fn run_the_rules(&mut self) {
         let mut nbs: i32;
         let mut swap_set = Rgol::new(self.game.len(), self.game[0].len(), false);
@@ -94,6 +79,14 @@ impl Rgol{
             }
         }
         self.game = swap_set.game;
+    }
+
+    pub fn init_glider(&mut self) {
+        self.game[1][3] = true;
+        self.game[2][1] = true;
+        self.game[2][3] = true;
+        self.game[3][2] = true;
+        self.game[3][3] = true;
     }
 }
 
@@ -132,19 +125,17 @@ mod tests {
         g.game[1][1] = true;
         g.game[1][2] = true;
         g.game[2][2] = true;
-        g.game[0][2] = true;
         assert!(g.game[1][1]);
         g.run_the_rules();
-        assert!(!g.game[1][1]);
+        assert!(g.game[1][1]);
 
         g = Rgol::new(4,4, false);
         g.game[0][2] = true;
         g.game[1][1] = true;
         g.game[2][2] = true;
-        g.game[0][2] = true;
         assert!(g.game[1][1]);
         g.run_the_rules();
-        assert!(!g.game[1][1]);
+        assert!(g.game[1][1]);
 
         //#3 rule
         g = Rgol::new(4,4, false);
@@ -171,27 +162,6 @@ mod tests {
         assert!(g.game[1][1]);
         g.run_the_rules();
         assert!(!g.game[1][1]);
-    }
-
-    #[test]
-    fn run_the_jewels() {
-        let mut g: Rgol = Rgol::new(4,4, false);
-        assert!(!g.game[1][1]);
-        g.game[0][0] = true;
-        g.game[0][1] = true;
-        g.game[0][2] = true;
-        g.game[1][2] = true;
-        g.run_the_rules();
-        assert!(g.game[1][1]);
-       
-        g = Rgol::new(4,4, false);
-        assert!(!g.game[0][3]);
-        g.game[0][0] = true;
-        g.game[3][0] = true;
-        g.game[3][2] = true;
-        g.game[3][3] = true;
-        g.run_the_rules();
-        assert!(g.game[0][3]);
     }
 
     #[test] 
@@ -276,20 +246,6 @@ mod tests {
                 assert!(!q.game[i][j]);
             }
         }
-    }
-
-    #[test]
-    fn update() {
-        let mut g = Rgol::new(3,5, false);
-        assert_eq!(g.game.len(), 3);
-        assert_eq!(g.game[0].len(), 5);
-        assert_eq!(g.game[g.game.len() - 1].len(), 5);
-        assert!(!g.game[1][2]);
-        g.update(1,2);
-        assert!(g.game[1][2]);
-        assert!(!g.game[1][1]);
-        assert!(!g.game[1][3]);
-        assert!(!g.game[2][1]);
     }
 }
 

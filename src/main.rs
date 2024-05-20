@@ -24,8 +24,8 @@ fn main() -> Result<()> {
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
 
-    let n_rows: usize = 10;
-    let n_cols: usize = 10;
+    let n_rows: usize = 6;
+    let n_cols: usize = 6;
     let mut gol = Rgol::new(n_rows,n_cols, false);
     gol.init_glider(); 
 
@@ -54,7 +54,7 @@ fn main() -> Result<()> {
                     .constraints(rows_in_grid.clone())
                     .split(frame.size()))
             }
-            for (i, r) in rows.clone().into_iter().enumerate() {
+            for (i, r) in rows.iter_mut().enumerate() {
                     grid.push(Layout::default()
                         .direction(Direction::Horizontal)
                         .constraints(cols_in_row.clone())
@@ -62,7 +62,7 @@ fn main() -> Result<()> {
                     )
             }
             
-            for (i, g) in grid.clone().into_iter().enumerate() {
+            for (i, g) in grid.iter_mut().enumerate() {
                 for j in 0..g.len() {
                     if gol.game[i %n_rows][j % n_cols] {
                         frame.render_widget(
